@@ -11,6 +11,10 @@ app.use(bodyParser.json());
 const tournamentsRoute = require('./routes/tournaments');
 app.use('/tournaments/',tournamentsRoute);
 
+const usersRoute = require('./routes/users');
+app.use('/users/', usersRoute);
+
+
 // Middlewares
 app.use('/posts', () => {
    console.log("Middleware is running");

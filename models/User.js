@@ -1,9 +1,11 @@
-const mongoose = require(mongoose);
+const mongoose = require('mongoose');
+const crypto = require('crypto');
 
-const userSchema = mongoose.Schema({
+const UserSchema = mongoose.Schema({
    user: {
        type: String,
-       required: true
+       required: true,
+       unique: true
    },
     password: {
        type: String,
@@ -11,14 +13,38 @@ const userSchema = mongoose.Schema({
    },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
+
+    image: {
+       type: String,
+        default: '../assets/avatar'
+    },
+
+    friends: [{username: String}],
+
+    hash: String,
+    salt: String,
 
     date: {
         type: Date,
         default: Date.now()
-    }
+    },
+
+
 
 });
 
-module.exports = mongoose.model('Tournament', userSchema);
+// for later...
+UserSchema.methods.setPassword = function(password){
+    this.salt = crypto.randomBytes(16).toString('hex');
+    this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
+};
+
+UserSchema.methods.validPassword = function(password) {
+    const hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
+    return this.hash === hash;
+};
+
+module.exports = mongoose.model('User', UserSchema);
