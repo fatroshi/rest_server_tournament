@@ -17,12 +17,23 @@ const UserSchema = mongoose.Schema({
         unique: true
     },
 
-    image: {
+    userAvatar: {
        type: String,
-        default: '../assets/avatar'
+        default: '../assets/avatar/user'
     },
 
-    friends: [{username: String}],
+    friends: [{type: mongoose.Schema.Types.ObjectId, ref: 'Friend'}],
+
+    team: {
+       name: {
+           type: String,
+           default: 'KURDISTAN'
+       },
+        avatar: {
+           type: String,
+            default: '../assets/avatar/team'
+        }
+    },
 
     hash: String,
     salt: String,
@@ -30,9 +41,7 @@ const UserSchema = mongoose.Schema({
     date: {
         type: Date,
         default: Date.now()
-    },
-
-
+    }
 
 });
 
